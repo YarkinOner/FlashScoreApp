@@ -1,31 +1,24 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import { View, Text, ScrollView, SafeAreaView } from 'react-native';
+import MatchCard from '@/components/MatchCard';
 
 export default function TabOneScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+    // style={...} kısmını ekledik ki Tailwind çalışmasa bile ekran siyah olsun
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#0A0E17' }}>
+      <ScrollView className="flex-1 px-4">
+        <View style={{ marginTop: 40, marginBottom: 20, paddingHorizontal: 16 }}>
+          <Text style={{ color: 'white', fontSize: 28, fontWeight: '900' }}>
+            FLASH<Text style={{ color: '#3B82F6' }}>SCORE</Text>
+          </Text>
+        </View>
+
+        {/* Maç Listesi */}
+        <View style={{ paddingHorizontal: 16 }}>
+          <MatchCard />
+          <MatchCard />
+          <MatchCard />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
