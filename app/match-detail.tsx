@@ -42,7 +42,6 @@ export default function MatchDetailScreen() {
 
   const isLive = details?.match_status !== "" && details?.match_status !== "Finished" && !details?.match_status.includes(":");
 
-  // Sekme İçeriklerini Yöneten Fonksiyon
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Summary':
