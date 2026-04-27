@@ -14,29 +14,41 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: '#171E2E',
           borderTopWidth: 0,
-          elevation: 0, // Android için gölgeyi kaldırır
+          height: 60, // Menü yüksekliğini biraz artırdık
+          paddingBottom: 8,
+          elevation: 0, // Android gölge kaldırıldı
         },
-        // Üstteki o beyaz başlığı (Tab One yazısını) tamamen kaldırır
+        // Üst başlığı (Header) gizler
         headerShown: false,
       }}>
 
-      {/* Ana Sayfa (Maçlar) */}
+      {/* 1. SEKMELİ: Maçlar (Ana Sayfa) */}
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Maçlar',
-          tabBarIcon: ({ color }) => <FontAwesome size={24} name="soccer-ball-o" color={color} />,
+          title: 'Matches',
+          tabBarIcon: ({ color }) => <FontAwesome size={22} name="soccer-ball-o" color={color} />,
         }}
       />
 
-      {/* Puan Durumu (Standings) */}
+      {/* 2. SEKMELİ: Puan Durumu */}
       <Tabs.Screen
         name="standings"
         options={{
-          title: 'Puan Durumu',
-          tabBarIcon: ({ color }) => <FontAwesome size={24} name="list-ol" color={color} />,
+          title: 'Standings',
+          tabBarIcon: ({ color }) => <FontAwesome size={22} name="list-ol" color={color} />,
         }}
       />
+
+      {/* 3. SEKMELİ: Fikstür (Yeni eklenen fixtures.tsx için) */}
+      <Tabs.Screen
+        name="fixtures"
+        options={{
+          title: 'Fixtures',
+          tabBarIcon: ({ color }) => <FontAwesome size={22} name="calendar" color={color} />,
+        }}
+      />
+
     </Tabs>
   );
 }

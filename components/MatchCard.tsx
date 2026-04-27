@@ -1,24 +1,33 @@
 import { View, Text } from 'react-native';
 
-export default function MatchCard() {
+interface MatchProps {
+  homeTeam: string;
+  awayTeam: string;
+  score: string;
+  time: string;
+}
+
+export default function MatchCard({ homeTeam, awayTeam, score, time }: MatchProps) {
   return (
-    <View style={{ backgroundColor: '#171E2E', padding: 16, borderRadius: 16, flexDirection: 'row', alignItems: 'center', marginBottom: 12, borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.2)' }}>
-      {/* Ev Sahibi */}
-      <View style={{ alignItems: 'center', flex: 1 }}>
-        <View style={{ width: 40, height: 40, backgroundColor: '#334155', borderRadius: 20, marginBottom: 4 }} />
-        <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>Fenerbahçe</Text>
-      </View>
+    <View style={{ backgroundColor: '#171E2E', borderRadius: 16, padding: 20, marginBottom: 12 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* Ev Sahibi */}
+        <View style={{ alignItems: 'center', flex: 1 }}>
+          <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#2D3748', marginBottom: 8 }} />
+          <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>{homeTeam}</Text>
+        </View>
 
-      {/* Skor */}
-      <View style={{ alignItems: 'center', paddingHorizontal: 10 }}>
-        <Text style={{ color: '#3B82F6', fontSize: 20, fontWeight: '900' }}>2 - 1</Text>
-        <Text style={{ color: '#94A3B8', fontSize: 10 }}>72'</Text>
-      </View>
+        {/* Skor ve Süre */}
+        <View style={{ alignItems: 'center', flex: 1 }}>
+          <Text style={{ color: '#3B82F6', fontSize: 20, fontWeight: 'bold' }}>{score}</Text>
+          <Text style={{ color: '#94A3B8', fontSize: 12, marginTop: 4 }}>{time}</Text>
+        </View>
 
-      {/* Deplasman */}
-      <View style={{ alignItems: 'center', flex: 1 }}>
-        <View style={{ width: 40, height: 40, backgroundColor: '#334155', borderRadius: 20, marginBottom: 4 }} />
-        <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>Galatasaray</Text>
+        {/* Deplasman */}
+        <View style={{ alignItems: 'center', flex: 1 }}>
+          <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#2D3748', marginBottom: 8 }} />
+          <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>{awayTeam}</Text>
+        </View>
       </View>
     </View>
   );
