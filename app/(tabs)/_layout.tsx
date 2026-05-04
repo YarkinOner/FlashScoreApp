@@ -42,9 +42,9 @@ export default function TabLayout() {
 
       {/* 3. SEKMELİ: Fikstür (Yeni eklenen fixtures.tsx için) */}
       <Tabs.Screen
-        name="fixtures"
+        name="leagues"
         options={{
-          title: 'Fixtures',
+          title: 'Leagues',
           tabBarIcon: ({ color }) => <FontAwesome size={22} name="calendar" color={color} />,
         }}
       />
