@@ -1,51 +1,65 @@
 import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        // Alt menüdeki aktif ikonun rengi (Parlak Mavi)
         tabBarActiveTintColor: '#3B82F6',
-        // Alt menüdeki inaktif ikonun rengi
         tabBarInactiveTintColor: '#94A3B8',
-        // Alt menü arka plan rengi (Koyu Lacivert)
         tabBarStyle: {
-          backgroundColor: '#171E2E',
-          borderTopWidth: 0,
-          height: 60, // Menü yüksekliğini biraz artırdık
-          paddingBottom: 8,
-          elevation: 0, // Android gölge kaldırıldı
+          backgroundColor: '#0A0E17',
+          borderTopColor: '#1E293B',
+          height: 65,
+          paddingBottom: 10,
+          paddingTop: 5,
         },
-        // Üst başlığı (Header) gizler
         headerShown: false,
       }}>
 
-      {/* 1. SEKMELİ: Maçlar (Ana Sayfa) */}
+      {/* 1. MATCHES */}
       <Tabs.Screen
         name="index"
         options={{
           title: 'Matches',
-          tabBarIcon: ({ color }) => <FontAwesome size={22} name="soccer-ball-o" color={color} />,
+          tabBarIcon: ({ color, size }) => <Ionicons name="football" size={size} color={color} />,
         }}
       />
 
-      {/* 2. SEKMELİ: Puan Durumu */}
+      {/* 2. NEWS */}
+      <Tabs.Screen
+        name="news"
+        options={{
+          title: 'News',
+          tabBarIcon: ({ color, size }) => <Ionicons name="newspaper" size={size} color={color} />,
+        }}
+      />
+
+      {/* 3. LEAGUES (Ana Liste) */}
+      <Tabs.Screen
+        name="leagues/index"
+        options={{
+          title: 'Leagues',
+          tabBarIcon: ({ color, size }) => <Ionicons name="trophy" size={size} color={color} />,
+        }}
+      />
+
+      {/* 4. ACCOUNT */}
       <Tabs.Screen
         name="standings"
         options={{
-          title: 'Standings',
-          tabBarIcon: ({ color }) => <FontAwesome size={22} name="list-ol" color={color} />,
+          title: 'Account',
+          tabBarIcon: ({ color, size }) => <Ionicons name="person-circle-outline" size={size} color={color} />,
         }}
       />
 
-      {/* 3. SEKMELİ: Fikstür (Yeni eklenen fixtures.tsx için) */}
+      {/* 5. GİZLİ SEKME: LEAGUE DETAIL */}
+      {/* Bu satır o fazlalık 5. sekmeyi alt bardan tamamen kaldırır */}
       <Tabs.Screen
-        name="leagues"
+        name="leagues/[id]"
         options={{
-          title: 'Leagues',
-          tabBarIcon: ({ color }) => <FontAwesome size={22} name="calendar" color={color} />,
+          href: null, // Alt bar menüsünde gösterme demek
         }}
       />
 

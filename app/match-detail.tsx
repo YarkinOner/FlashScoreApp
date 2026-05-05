@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Platform, StatusBar } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
@@ -45,25 +45,52 @@ export default function MatchDetailScreen() {
 
   const isLive = details?.match_status !== "" && details?.match_status !== "Finished" && !details?.match_status.includes(":");
 
-  // Gol Özeti
   const renderGoalSummary = () => {
-    const goals = details?.goal || [];
+    const goals = details?.goalscorer || [];
     if (goals.length === 0) return <Text style={styles.emptyText}>No goals recorded.</Text>;
 
     return (
       <View style={styles.goalSummaryCard}>
-        {goals.map((g: any, index: number) => (
-          <View key={index} style={styles.goalRow}>
-            <View style={styles.goalTimeBadge}><Text style={styles.goalTimeText}>{g.time}'</Text></View>
-            <Ionicons name="football" size={14} color="white" style={{ marginRight: 8 }} />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.goalScorerText}>{g.goal_scorer || g.player}</Text>
-              {/* Asist bilgisi varsa yazdır */}
-              {g.info && g.info !== "" && <Text style={styles.assistText}>Assist: {g.info}</Text>}
+        {goals.map((g: any, index: number) => {
+          // API'deki farklı isimlendirme ihtimallerini topluyoruz
+          const scorerName = g.scorer || g.player || g.home_scorer || g.away_scorer;
+          const assistName = g.assist || g.home_assist || g.away_assist;
+
+          return (
+            <View key={index} style={styles.goalRow}>
+              {/* Dakika */}
+              <View style={styles.goalTimeBadge}>
+                <Text style={styles.goalTimeText}>{g.time}'</Text>
+              </View>
+
+              {/* Top İkonu */}
+              <Ionicons name="football" size={16} color="#3B82F6" style={{ marginRight: 10 }} />
+
+              {/* Oyuncu ve Asist Bilgisi */}
+              <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.goalScorerText}>
+                    {scorerName || "Unknown Player"}
+                  </Text>
+                  {g.info && g.info !== "" && (
+                    <Text style={styles.goalInfoTag}> ({g.info})</Text>
+                  )}
+                </View>
+
+                {assistName && assistName !== "" ? (
+                  <Text style={styles.assistText}>
+                    assist by <Text style={{ color: '#94A3B8' }}>{assistName}</Text>
+                  </Text>
+                ) : null}
+              </View>
+
+              {/* Skor Bilgisi */}
+              <View style={styles.scoreBadgeMini}>
+                <Text style={styles.miniScoreText}>[{g.score}]</Text>
+              </View>
             </View>
-            <Text style={styles.miniScoreText}>{g.score}</Text>
-          </View>
-        ))}
+          );
+        })}
       </View>
     );
   };
@@ -107,7 +134,6 @@ export default function MatchDetailScreen() {
         return (
           <ScrollView style={styles.section}>
             <View style={styles.lineupContainer}>
-              {/* Home Team */}
               <View style={styles.lineupSide}>
                 <Text style={styles.teamHeader}>{details.match_hometeam_name}</Text>
                 <Text style={styles.lineupSubTitle}>Starting XI</Text>
@@ -115,10 +141,7 @@ export default function MatchDetailScreen() {
                 <Text style={[styles.lineupSubTitle, { marginTop: 15 }]}>Substitutes</Text>
                 {renderPlayerList(details.lineup?.home?.substitutes || [], 'home')}
               </View>
-
               <View style={styles.lineupDivider} />
-
-              {/* Away Team */}
               <View style={styles.lineupSide}>
                 <Text style={[styles.teamHeader, { textAlign: 'right' }]}>{details.match_awayteam_name}</Text>
                 <Text style={[styles.lineupSubTitle, { textAlign: 'right' }]}>Starting XI</Text>
@@ -168,7 +191,12 @@ export default function MatchDetailScreen() {
       <Stack.Screen options={{ title: 'Match Details', headerTintColor: '#fff', headerStyle: { backgroundColor: '#171E2E' } }} />
       <View style={styles.headerCard}>
         <View style={styles.teamContainer}><Image source={{ uri: details?.team_home_badge }} style={styles.badgeLarge} /><Text style={styles.teamName}>{details?.match_hometeam_name}</Text></View>
-        <View style={styles.scoreContainer}><Text style={styles.bigClockText}>{details?.match_hometeam_score !== "" ? `${details?.match_hometeam_score} - ${details?.match_awayteam_score}` : details?.match_time}</Text><View style={styles.statusBadge}><Text style={styles.statusLabel}>{isLive ? `${details?.match_status}'` : details?.match_status || "UPCOMING"}</Text></View></View>
+        <View style={styles.scoreContainer}>
+            <Text style={styles.bigClockText}>{details?.match_hometeam_score !== "" ? `${details?.match_hometeam_score} - ${details?.match_awayteam_score}` : details?.match_time}</Text>
+            <View style={styles.statusBadge}>
+                <Text style={styles.statusLabel}>{isLive ? `${details?.match_status}'` : details?.match_status || "UPCOMING"}</Text>
+            </View>
+        </View>
         <View style={styles.teamContainer}><Image source={{ uri: details?.team_away_badge }} style={styles.badgeLarge} /><Text style={styles.teamName}>{details?.match_awayteam_name}</Text></View>
       </View>
       <View style={styles.tabContainer}>
@@ -203,13 +231,15 @@ const styles = StyleSheet.create({
   activeTabText: { color: 'white' },
   section: { paddingHorizontal: 16, marginTop: 20 },
   sectionTitle: { color: '#3B82F6', fontWeight: 'bold', fontSize: 12, marginBottom: 10, letterSpacing: 1 },
-  goalSummaryCard: { backgroundColor: '#171E2E', borderRadius: 15, padding: 15, marginBottom: 20 },
-  goalRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
-  goalTimeBadge: { backgroundColor: '#1E293B', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6, marginRight: 10 },
-  goalTimeText: { color: '#3B82F6', fontSize: 12, fontWeight: 'bold' },
+  goalSummaryCard: { backgroundColor: '#171E2E', borderRadius: 15, paddingHorizontal: 15, paddingVertical: 5, marginBottom: 20, borderWidth: 1, borderColor: '#1E293B' },
+  goalRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#1E293B' },
+  goalTimeBadge: { width: 35 },
+  goalTimeText: { color: 'white', fontSize: 13, fontWeight: 'bold' },
   goalScorerText: { color: 'white', fontWeight: 'bold', fontSize: 14 },
-  assistText: { color: '#94A3B8', fontSize: 11, marginTop: 2 },
-  miniScoreText: { color: '#10B981', fontWeight: 'bold', fontSize: 12 },
+  goalInfoTag: { color: '#EF4444', fontSize: 11, fontWeight: 'bold' },
+  assistText: { color: '#475569', fontSize: 12, marginTop: 2, fontStyle: 'italic' },
+  scoreBadgeMini: { backgroundColor: 'rgba(59, 130, 246, 0.05)', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
+  miniScoreText: { color: '#10B981', fontWeight: 'bold', fontSize: 13 },
   infoCard: { backgroundColor: '#171E2E', borderRadius: 15, paddingHorizontal: 15, paddingVertical: 5, marginBottom: 20 },
   infoBox: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: '#1E293B' },
   infoLabel: { color: '#94A3B8', fontSize: 14 },

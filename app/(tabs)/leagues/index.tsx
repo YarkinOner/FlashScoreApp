@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
-import { MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
-// MLS has been removed from the league list
 const LEAGUES = [
   { id: '152', name: 'Premier League', country: 'England', logo: 'https://apiv3.apifootball.com/datasets/leagues/152_premier_league.png' },
   { id: '302', name: 'La Liga', country: 'Spain', logo: 'https://apiv3.apifootball.com/datasets/leagues/302_la_liga.png' },
@@ -23,6 +22,7 @@ export default function LeaguesScreen() {
       <Stack.Screen
         options={{
           title: 'Leagues',
+          headerShown: true, // Üstte Leagues yazısı görünsün
           headerStyle: { backgroundColor: '#0A0E17' },
           headerTintColor: '#fff',
           headerShadowVisible: false
@@ -36,17 +36,19 @@ export default function LeaguesScreen() {
           <TouchableOpacity
             key={league.id}
             style={styles.leagueCard}
-            onPress={() => router.push({
-              pathname: '/(tabs)/standings',
-              params: { leagueId: league.id }
-            })}
+            onPress={() => {
+              // BURASI KRİTİK: Artık /standings'e değil, kendi içindeki [id].tsx'e gidiyor
+              router.push({
+                pathname: "/leagues/[id]",
+                params: { id: league.id }
+              });
+            }}
           >
             <View style={styles.leagueInfo}>
               <View style={styles.logoContainer}>
                 <Image
                   source={{ uri: league.logo }}
                   style={styles.leagueLogo}
-                  defaultSource={{ uri: 'https://via.placeholder.com/100' }}
                 />
               </View>
               <View>
