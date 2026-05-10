@@ -69,7 +69,7 @@ FlashScoreApp/
 - [ ] Auth: Intégration de Firebase Auth pour la synchronisation du compte.
 - [ ] Data: Connexion en temps réel aux API de scores sportifs mondiaux (RapidAPI).
 - [ ] UI: Implémentation du mode "Drag & Drop" pour déplacer les cartes.
-- [ ] Langue: Support multilingue complet (FR, TR, EN).
+
 
 ---
 
