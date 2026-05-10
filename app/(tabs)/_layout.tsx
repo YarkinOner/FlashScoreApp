@@ -47,7 +47,7 @@ export default function TabLayout() {
 
       {/* 4. ACCOUNT */}
       <Tabs.Screen
-        name="standings"
+        name="account"
         options={{
           title: 'Account',
           tabBarIcon: ({ color, size }) => <Ionicons name="person-circle-outline" size={size} color={color} />,
